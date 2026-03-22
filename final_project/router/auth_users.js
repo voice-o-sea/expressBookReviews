@@ -42,8 +42,8 @@ regd_users.post("/login", (req, res) => {
 regd_users.put("/auth/review/:isbn", (req, res) => {
   let book = books[req.params.isbn];
   if (book) {
-    book.reviews[req.session.username] = req.query.review;
-    return res.status(200).json({ message: "Review added." });
+    book.reviews[req.session.authorization.username] = req.query.review;
+    return res.status(200).json({ message: "Review added.", reviews: book.reviews });
   } else {
     return res.status(404).json({ message: "Unable to find the book." });
   }
@@ -53,7 +53,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 regd_users.delete("/auth/review/:isbn", (req, res) => {
   let book = books[req.params.isbn];
   if (book) {
-    delete book.reviews[req.session.username];
+    delete book.reviews[req.session.authorization.username];
     return res.status(200).json({ message: "Review deleted." });
   } else {
     return res.status(404).json({ message: "Unable to find the book." });
